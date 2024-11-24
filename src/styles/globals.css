@@ -98,9 +98,9 @@ a {
 }
 
 .label-generic {
-  @apply block  text-black font-medium sm:text-base text-xs mb-1;
+  @apply block  text-black font-normal sm:text-base text-xs mb-1;
 }
 
 .form-group {
-  @apply mb-4;
+  @apply mb-2;
 }

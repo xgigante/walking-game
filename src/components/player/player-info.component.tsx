@@ -113,7 +113,7 @@ const PlayerInfoComponent: React.FC<PlayerInfoProps> = ({
           onSubmit={handleDeletePlayer}
           submitText="Delete"
         >
-          <p className="text-gray-900 sm:pb-2 pb-4 sm:text-base text-xs">
+          <p className="text-gray-900 sm:pb-2 pb-4 pt-3 sm:text-base text-xs">
             Are you sure you want to delete this player?
           </p>
         </Modal>
