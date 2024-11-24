@@ -1,54 +1,77 @@
+import React, { useCallback, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import ModalAddPlayer from "@/components/modal-add-player/modal-add-player.component";
 import ModalCreateMap from "@/components/modal-create-map/modal-create-map.component";
-import { Player } from "@/interfaces/player.interface";
-import React, { useCallback, useState } from "react";
+import PlayerTable from "@/components/player-table/player-table.component";
+import PlayerComponent from "@/components/player/player.component";
+import { Player, PlayerScenario } from "@/interfaces/player.interface";
+import Footer from "@/layout/footer.component";
+import Header from "@/layout/header.component";
+import Main from "@/layout/main.component";
+import { AppDispatch, RootState } from "@/store";
+import { resetGame, setActivePlayer } from "@/store/game-slice";
+import { deleteAllActiveUsers } from "@/store/game.service";
 
 const Home: React.FC = () => {
-  const [isCreateMapOpen, setCreateMapOpen] = useState<boolean>(false);
-  const [isAddPlayerOpen, setAddPlayerOpen] = useState<boolean>(false);
-  const [players, setPlayers] = useState<Player[]>([]);
-  const [map, setMap] = useState<{ width: number; height: number } | null>(
-    null
+  // Redux hooks
+  const dispatch = useDispatch<AppDispatch>();
+  const players: Player[] = useSelector(
+    (state: RootState) => state.game.players
   );
 
-  const handleCreateMap = useCallback(
-    (mapData: { width: number; height: number }): void => {
-      setMap(mapData);
-      setCreateMapOpen(false);
-    },
-    [setMap, setCreateMapOpen]
-  );
+  // Component state
+  const [isCreateMapOpen, setCreateMapOpen] = useState(false);
+  const [isAddPlayerOpen, setAddPlayerOpen] = useState(false);
 
-  const handleAddPlayer = useCallback(
-    (username: string): void => {
-      const newPlayer: Player = {
-        username,
-        position: { row: 0, column: 0 },
-      };
-      console.log(newPlayer);
-      setPlayers((prevPlayers) => [...prevPlayers, newPlayer]);
-    },
-    [setPlayers]
+  // Handlers
+  const openCreateMapModal = useCallback(() => setCreateMapOpen(true), []);
+  const openAddPlayerModal = useCallback(() => setAddPlayerOpen(true), []);
+  const resetGameHandler = useCallback(async () => {
+    await deleteAllActiveUsers(dispatch, players);
+    dispatch(resetGame());
+  }, [dispatch, players]);
+  const selectPlayerHandler = useCallback(
+    (player: Player) => dispatch(setActivePlayer(player.username)),
+    [dispatch]
   );
 
   return (
-    <div>
-      <h1>Walking Game</h1>
+    <div className="flex flex-col min-h-screen bg-white dark:bg-dark-bg text-black dark:text-white">
+      {/* Header with actions */}
+      <Header
+        onCreateMap={openCreateMapModal}
+        onAddPlayer={openAddPlayerModal}
+        onResetGame={resetGameHandler}
+      />
 
-      {/* Botones para abrir modales */}
-      <button onClick={() => setCreateMapOpen(true)}>Crear Mapa</button>
-      <button onClick={() => setAddPlayerOpen(true)}>Add Player</button>
+      {/* Main content displaying the player table */}
+      <Main className="flex-grow">
+        <PlayerTable players={players} />
+      </Main>
 
-      {/* Modales */}
+      {/* Footer with player components */}
+      <Footer>
+        {players.map((player, index) => (
+          <div className="sm:w-1/6 w-full h-32" key={index}>
+            <PlayerComponent
+              player={player}
+              scenario={PlayerScenario.InFooter}
+              onClick={() => selectPlayerHandler(player)}
+            />
+          </div>
+        ))}
+      </Footer>
+
+      {/* Modal for creating a map */}
       <ModalCreateMap
         isOpen={isCreateMapOpen}
         onClose={() => setCreateMapOpen(false)}
-        onCreateMap={handleCreateMap}
       />
+
+      {/* Modal for adding a player */}
       <ModalAddPlayer
         isOpen={isAddPlayerOpen}
         onClose={() => setAddPlayerOpen(false)}
-        onAddPlayer={handleAddPlayer}
       />
     </div>
   );
