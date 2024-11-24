@@ -4,6 +4,7 @@ import { ModalCreateMapProps } from "@/interfaces/modal-create-map.interface";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
 import { createGameFromApi } from "@/store/game.service";
+import useWindowSize from "@/hooks/use-window-size";
 
 const ModalCreateMap: React.FC<ModalCreateMapProps> = ({ isOpen, onClose }) => {
   // Local state
@@ -14,11 +15,17 @@ const ModalCreateMap: React.FC<ModalCreateMapProps> = ({ isOpen, onClose }) => {
   const dispatch = useDispatch<AppDispatch>();
 
   // Reset the width and height when the modal is opened
+  const { width: windowWidth } = useWindowSize();
   useEffect(() => {
     if (!isOpen) return;
-    setWidth(7);
-    setHeight(5);
-  }, [isOpen]);
+    if (windowWidth <= 768) {
+      setWidth(5);
+      setHeight(10);
+    } else {
+      setWidth(10);
+      setHeight(7);
+    }
+  }, [isOpen, windowWidth]);
 
   // Handlers
   const handleSubmit = useCallback(() => {
@@ -42,7 +49,7 @@ const ModalCreateMap: React.FC<ModalCreateMapProps> = ({ isOpen, onClose }) => {
       onSubmit={handleSubmit}
       submitText="Create"
     >
-      <div className="grid grid-cols-1 sm:grid-cols-2 sm:gap-2 md:gap-4 lg:gap-4">
+      <div className="pt-2 pb-2 sm:gap-2 gap-0 grid grid-cols-1 sm:grid-cols-2">
         {/* Input fields for width and height */}
         <div className="form-group">
           <label className="label-generic">Columns:</label>
