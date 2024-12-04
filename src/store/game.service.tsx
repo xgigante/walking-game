@@ -1,21 +1,25 @@
-import axios from "axios";
-import {
-  createGame,
-  addPlayer,
-  deletePlayer,
-  statusGame,
-  statusPlayer,
-  movePlayer,
-  setMovePlayerError,
-  removeAllActiveUsers,
-} from "./game-slice";
 import { Player } from "@/interfaces/player.interface";
 import { Dispatch } from "@reduxjs/toolkit";
-import store from "./index";
-import { AppDispatch } from "./index";
+import axios from "axios";
+import https from "https";
+
+import store, { AppDispatch } from ".";
+import {
+  addPlayer,
+  createGame,
+  deletePlayer,
+  movePlayer,
+  removeAllActiveUsers,
+  setMovePlayerError,
+  statusGame,
+  statusPlayer,
+} from "./game-slice";
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  httpsAgent: new https.Agent({
+    rejectUnauthorized: false,
+  }),
 });
 
 const playerNumber = (): string => {
