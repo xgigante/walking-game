@@ -1,11 +1,12 @@
 import { PlayerInfoProps } from "@/interfaces/player.interface";
 import React, { useState, useCallback, useEffect, useMemo } from "react";
 import { AiFillDelete, AiOutlineClose } from "react-icons/ai";
-import Modal from "../shared/modal/modal.component";
+
 import { deletePlayerFromAPI, statusPlayerFromApi } from "@/store/game.service";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store";
 import { Position } from "@/interfaces/game.interface";
+import Modal from "@/shared/modal/modal.component";
 
 // Helper function to convert position to move
 const convertPositionToMove = (position: Position) => {

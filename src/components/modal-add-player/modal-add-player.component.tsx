@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import Modal from "@/components/shared/modal/modal.component";
+import Modal from "@/shared/modal/modal.component";
 import { ModalAddPlayerProps } from "@/interfaces/modal.add-player.interface";
 import PlayerComponent from "../player/player.component";
 import { players } from "@/data/players.data";

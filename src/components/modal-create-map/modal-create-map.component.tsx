@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import Modal from "@/components/shared/modal/modal.component";
+import Modal from "@/shared/modal/modal.component";
 import { ModalCreateMapProps } from "@/interfaces/modal-create-map.interface";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
