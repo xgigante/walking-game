@@ -4,7 +4,7 @@ import { ModalCreateMapProps } from "@/interfaces/modal-create-map.interface";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
 import { createGameFromApi } from "@/store/game.service";
-import useWindowSize from "@/hooks/use-window-size";
+import useWindowSize from "@/hooks/use-window-size.hook";
 
 const ModalCreateMap: React.FC<ModalCreateMapProps> = ({ isOpen, onClose }) => {
   // Local state

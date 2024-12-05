@@ -43,3 +43,8 @@ export enum PlayerScenario {
   InFooter = "inFooter",
   InTable = "inTable",
 }
+
+export interface PlayerListProps {
+  players: Player[];
+  onSelectPlayer: (player: Player) => void;
+}
