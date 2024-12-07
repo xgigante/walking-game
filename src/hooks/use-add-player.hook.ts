@@ -20,16 +20,20 @@ import { Player } from "@/interfaces/player.interface";
  * and a function to handle the submission of the selected player.
  */
 export const useAddPlayer = (onClose: () => void) => {
+  // Redux hooks
   const dispatch = useDispatch<AppDispatch>();
 
+  // Local state
   const [selectedPlayer, setSelectedPlayer] = useState<Player | undefined>(
     undefined
   );
 
+  // Reset the active player when the modal is closed
   useEffect(() => {
     dispatch(setActivePlayer(""));
   }, [onClose, dispatch]);
 
+  // Handle submission
   const handleSubmit = useCallback(() => {
     if (selectedPlayer) {
       dispatch(addPlayerFromApi(selectedPlayer));
