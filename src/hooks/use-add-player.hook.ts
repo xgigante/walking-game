@@ -6,18 +6,14 @@ import { AppDispatch } from "@/store";
 import { Player } from "@/interfaces/player.interface";
 
 /**
- * Custom hook to handle adding a player.
+ * Custom hook to add a player to the game.
  *
- * This hook provides functionality to select a player, handle the submission
- * of the selected player, and manage the state related to adding a player.
+ * @param {Function} onClose - Function to call when the modal is closed.
  *
- * @param {() => void} onClose - A callback function to be called when the modal is closed.
- * @returns {{
- *   selectedPlayer: Player | undefined,
- *   setSelectedPlayer: React.Dispatch<React.SetStateAction<Player | undefined>>,
- *   handleSubmit: () => void
- * }} - An object containing the selected player, a function to set the selected player,
- * and a function to handle the submission of the selected player.
+ * @returns {Object} - An object containing the selected player and a submit handler.
+ * @returns {Object | undefined} selectedPlayer - The selected player object.
+ * @returns {Function} setSelectedPlayer - Function to set the selected player.
+ * @returns {Function} handleSubmit - Function to handle the submission of the player.
  */
 export const useAddPlayer = (onClose: () => void) => {
   // Redux hooks

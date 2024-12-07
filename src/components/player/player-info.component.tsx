@@ -4,6 +4,17 @@ import Modal from "@/shared/modal/modal.component";
 import { PlayerInfoProps } from "@/interfaces/player.interface";
 import { usePlayerInfo } from "@/hooks/use-player-info.hook";
 
+/**
+ * PlayerInfoComponent is a React functional component that displays player information
+ * in a modal. It shows the player's image, title, and number of moves. It also provides
+ * a delete button to remove the player and a close button to close the modal.
+ *
+ * @param {PlayerInfoProps} props - The properties passed to the component.
+ * @param {string} props.username - The username of the player.
+ * @param {() => void} props.onClick - The function to call when the close button is clicked.
+ *
+ * @returns {JSX.Element} The rendered component.
+ */
 const PlayerInfoComponent: React.FC<PlayerInfoProps> = ({
   username,
   onClick,

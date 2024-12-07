@@ -4,19 +4,36 @@ import { deletePlayerFromAPI, statusPlayerFromApi } from "@/store/game.service";
 import { AppDispatch, RootState } from "@/store";
 import { Position } from "@/interfaces/game.interface";
 
+/**
+ * Custom hook to get player information.
+ *
+ * @param {string} username - The username of the player.
+ * @param {Function} onClick - Function to call after deleting the player.
+ *
+ * @returns {Object} - An object containing the player information and handlers.
+ * @returns {Object | undefined} player - The player object.
+ * @returns {string} moves - The moves made by the player.
+ * @returns {boolean} isConfirmOpen - Indicates if the confirmation dialog is open.
+ * @returns {Function} setIsConfirmOpen - Function to set the confirmation dialog state.
+ * @returns {Function} handleDeletePlayer - Function to delete the player.
+ */
 export const usePlayerInfo = (username: string, onClick?: () => void) => {
+  // Redux hooks
   const dispatch = useDispatch<AppDispatch>();
+
+  // Local state
   const players = useSelector((state: RootState) => state.game.players);
   const player = players.find((player) => player.username === username);
-
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
+  // Get player status from API
   useEffect(() => {
     if (username) {
       dispatch(statusPlayerFromApi(username));
     }
   }, [dispatch, username]);
 
+  // Hndle delete player
   const handleDeletePlayer = useCallback(() => {
     if (player?.username) {
       dispatch(deletePlayerFromAPI(player.username));
@@ -25,6 +42,7 @@ export const usePlayerInfo = (username: string, onClick?: () => void) => {
     }
   }, [dispatch, player, onClick]);
 
+  // Convert position to move
   const moves = useMemo(() => {
     const convertPositionToMove = (position: Position) => {
       const toColumnLetter = (num: number) => {
