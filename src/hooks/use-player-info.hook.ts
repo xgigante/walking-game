@@ -33,7 +33,7 @@ export const usePlayerInfo = (username: string, onClick?: () => void) => {
     }
   }, [dispatch, username]);
 
-  // Hndle delete player
+  // Handle delete player
   const handleDeletePlayer = useCallback(() => {
     if (player?.username) {
       dispatch(deletePlayerFromAPI(player.username));

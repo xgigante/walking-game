@@ -23,7 +23,7 @@ const PlayerInfoComponent: React.FC<PlayerInfoProps> = ({
     usePlayerInfo(username, onClick);
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="w-80 sm:w-96 h-full max-h-96 shadow-card-modal bg-dark-card rounded-lg">
         <div className="relative w-full h-full max-h-96 flex flex-col items-center justify-between marker rounded-lg bg-gradient-purple-alpha">
           <div
