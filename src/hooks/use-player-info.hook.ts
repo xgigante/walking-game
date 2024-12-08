@@ -24,7 +24,6 @@ export const usePlayerInfo = (username: string, onClick?: () => void) => {
   // Local state
   const players = useSelector((state: RootState) => state.game.players);
   const player = players.find((player) => player.username === username);
-  console.log(player);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
   // Get player status from API
