@@ -1,66 +1,40 @@
 import backgroundImage from "@/assets/images/earth.png";
+import { useCell } from "@/hooks/use-cell.hook";
 import { CellProps } from "@/interfaces/cell.interface";
-import { Player, PlayerScenario } from "@/interfaces/player.interface";
-import { AppDispatch, RootState } from "@/store";
-import { movePlayerFromApi } from "@/store/game.service";
-import { setActivePlayer } from "@/store/game-slice";
-import React, { useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { PlayerScenario } from "@/interfaces/player.interface";
+import React from "react";
+
 import PlayerComponent from "../player/player.component";
 
+/**
+ * Component to render a cell in the player table.
+ *
+ * @param {Object} props - The component props.
+ * @param {number} props.row - The row index of the cell.
+ * @param {number} props.col - The column index of the cell.
+ * @param {Array} props.players - The list of players.
+ * @param {Object} props.activePlayer - The currently active player.
+ * @param {Object} props.activePlayerData - The data of the active player.
+ * @param {Function} props.onSelectPlayer - Callback function to handle player selection.
+ *
+ * @returns {JSX.Element} - The cell component.
+ */
 const Cell: React.FC<CellProps> = ({
   row,
   col,
   players,
   activePlayer,
+  activePlayerData,
   onSelectPlayer,
 }) => {
-  //Redux hooks
-  const dispatch = useDispatch<AppDispatch>();
-
-  // Get the data for the active player
-  const activePlayerData = players.find(
-    (player) => player.username === activePlayer
-  );
-
-  // Combine the search for both the player in the cell and player in history into one useMemo.
-  const { playerInCell, playerInHistory } = useMemo(() => {
-    let playerInCell: Player | undefined;
-    let playerInHistory: Player | undefined;
-
-    players.forEach((player) => {
-      if (
-        !playerInCell &&
-        player.position.row === row &&
-        player.position.column === col
-      ) {
-        playerInCell = player;
-      }
-      if (
-        !playerInHistory &&
-        player.positions.some((pos) => pos.row === row && pos.column === col)
-      ) {
-        playerInHistory = player;
-      }
-    });
-
-    return { playerInCell, playerInHistory };
-  }, [players, row, col]);
-
-  // Determine if the current cell is adjacent to the active player's position.
-  const isAdjacent = useMemo(() => {
-    if (!activePlayerData) return false;
-
-    const currentRow = activePlayerData.position.row;
-    const currentCol = activePlayerData.position.column;
-
-    return (
-      (row === currentRow && Math.abs(col - currentCol) === 1) ||
-      (col === currentCol && Math.abs(row - currentRow) === 1)
-    );
-  }, [row, col, activePlayerData]);
-
-  // Dynamic style based on player presence and history
+  const { playerInCell, playerInHistory, isAdjacent, handleClick } = useCell({
+    row,
+    col,
+    players,
+    activePlayer,
+    activePlayerData,
+    onSelectPlayer,
+  });
   const cellStyle = {
     backgroundImage: playerInCell ? undefined : `url(${backgroundImage.src})`,
     borderColor: playerInCell
@@ -70,30 +44,6 @@ const Cell: React.FC<CellProps> = ({
       : undefined,
     borderWidth: playerInCell ? undefined : playerInHistory ? "4px" : undefined,
     borderRadius: playerInHistory ? "8px" : undefined,
-  };
-
-  // Function to move the active player to the target cell
-  const movePlayer = async () => {
-    if (!activePlayer || playerInCell) return;
-
-    const operation = {
-      operationType: 0,
-      path: "/Position",
-      op: "replace",
-      from: "string",
-      value: { Row: row, Column: col },
-    };
-
-    await dispatch(movePlayerFromApi(activePlayer, operation));
-    dispatch(setActivePlayer(activePlayer));
-  };
-
-  // Handlers
-  const handleClick = async () => {
-    await movePlayer();
-    if (playerInCell) {
-      onSelectPlayer(playerInCell.username);
-    }
   };
 
   return (
@@ -107,7 +57,6 @@ const Cell: React.FC<CellProps> = ({
       style={cellStyle}
       onClick={handleClick}
     >
-      {/* Render player component if there's a player in the cell */}
       {playerInCell && (
         <PlayerComponent
           player={playerInCell}

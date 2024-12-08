@@ -13,6 +13,10 @@ const PlayerTable: React.FC<PlayerTableProps> = ({ players }) => {
   // Local state
   const [activePlayer, setActivePlayer] = useState<string | null>(null);
 
+  // Get the active player's data
+  const activePlayerData =
+    players.find((player) => player.username === activePlayer) || null;
+
   // Handlers
   const handleSelectPlayer = useCallback((username: string) => {
     setActivePlayer(username);
@@ -38,6 +42,7 @@ const PlayerTable: React.FC<PlayerTableProps> = ({ players }) => {
             col={col}
             players={players}
             activePlayer={activePlayer}
+            activePlayerData={activePlayerData}
             onSelectPlayer={handleSelectPlayer}
           />
         ))
