@@ -1,32 +1,26 @@
+import React from "react";
 import { PlayerTableProps } from "@/interfaces/player-table.interface";
-import React, { use, useCallback, useState } from "react";
-
 import Cell from "./cell.component";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
+import { usePlayerTable } from "@/hooks/use-player-table.hook";
 
+/**
+ * PlayerTable component renders a grid of player cells.
+ *
+ * @component
+ * @param {PlayerTableProps} props - The properties for the PlayerTable component.
+ * @param {Array} props.players - The list of players to be displayed in the table.
+ *
+ * @returns {JSX.Element} The rendered PlayerTable component.
+ */
 const PlayerTable: React.FC<PlayerTableProps> = ({ players }) => {
-  // Redux hooks
-  const width = useSelector((state: RootState) => state.game.width);
-  const height = useSelector((state: RootState) => state.game.height);
-
-  // Local state
-  const [activePlayer, setActivePlayer] = useState<string | null>(null);
-
-  // Get the active player's data
-  const activePlayerData =
-    players.find((player) => player.username === activePlayer) || null;
-
-  // Handlers
-  const handleSelectPlayer = useCallback((username: string) => {
-    setActivePlayer(username);
-  }, []);
-
-  // Dynamic grid styles based on width and height
-  const gridStyle = {
-    gridTemplateColumns: `repeat(${width}, 1fr)`,
-    gridTemplateRows: `repeat(${height}, 1fr)`,
-  };
+  const {
+    width,
+    height,
+    activePlayer,
+    activePlayerData,
+    handleSelectPlayer,
+    gridStyle,
+  } = usePlayerTable({ players });
 
   return (
     <div
