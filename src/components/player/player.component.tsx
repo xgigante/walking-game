@@ -3,7 +3,6 @@ import { FaEllipsisV } from "react-icons/fa";
 import PlayerInfoComponent from "./player-info.component";
 import { PlayerProps, PlayerScenario } from "@/interfaces/player.interface";
 import { usePlayer } from "@/hooks/use-player.hook";
-import { getClassNames } from "@/shared/utils/utils";
 
 /**
  * `PlayerComponent` is a memoized React functional component that renders a player card with dynamic styles and behaviors.
