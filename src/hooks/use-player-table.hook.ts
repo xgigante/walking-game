@@ -1,24 +1,20 @@
-// hooks/usePlayerTableLogic.ts
-import { useCallback, useState, useMemo } from "react";
-import { useSelector } from "react-redux";
-import { Player } from "@/interfaces/player.interface";
-import { RootState } from "@/store";
 import { PlayerTableProps } from "@/interfaces/player-table.interface";
+import { RootState } from "@/store";
+import { useCallback, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
 
 /**
- * Custom hook to manage the player table state and interactions.
+ * Custom hook to handle player table logic.
  *
- * @param {PlayerTableProps} props - The properties for the player table.
- * @param {Array<Player>} props.players - The list of players.
- * @returns {Object} The state and handlers for the player table.
- * @returns {number} width - The width of the game grid.
- * @returns {number} height - The height of the game grid.
- * @returns {string | null} activePlayer - The username of the currently active player.
- * @returns {Player | null} activePlayerData - The data of the currently active player.
- * @returns {Function} handleSelectPlayer - Handler to set the active player.
- * @returns {Object} gridStyle - The dynamic styles for the game grid.
- * @returns {string} gridStyle.gridTemplateColumns - The CSS grid template columns.
- * @returns {string} gridStyle.gridTemplateRows - The CSS grid template rows.
+ * @param {Object} props - The properties object.
+ * @param {Array} props.players - The list of players.
+ *
+ * @returns {Object} - An object containing the player table logic.
+ * @returns {number} width - The width of the game board.
+ * @returns {number} height - The height of the game board.
+ * @returns {Object | null} activePlayerData - The data of the active player.
+ * @returns {Function} handleSelectPlayer - Function to handle player selection.
+ * @returns {Object} gridStyle - The grid styles.
  */
 export const usePlayerTable = ({ players }: PlayerTableProps) => {
   // Redux hooks
@@ -51,7 +47,6 @@ export const usePlayerTable = ({ players }: PlayerTableProps) => {
   return {
     width,
     height,
-    activePlayer,
     activePlayerData,
     handleSelectPlayer,
     gridStyle,

@@ -13,14 +13,8 @@ import { usePlayerTable } from "@/hooks/use-player-table.hook";
  * @returns {JSX.Element} The rendered PlayerTable component.
  */
 const PlayerTable: React.FC<PlayerTableProps> = ({ players }) => {
-  const {
-    width,
-    height,
-    activePlayer,
-    activePlayerData,
-    handleSelectPlayer,
-    gridStyle,
-  } = usePlayerTable({ players });
+  const { width, height, activePlayerData, handleSelectPlayer, gridStyle } =
+    usePlayerTable({ players });
 
   return (
     <div
@@ -35,7 +29,6 @@ const PlayerTable: React.FC<PlayerTableProps> = ({ players }) => {
             row={row}
             col={col}
             players={players}
-            activePlayer={activePlayer}
             activePlayerData={activePlayerData}
             onSelectPlayer={handleSelectPlayer}
           />

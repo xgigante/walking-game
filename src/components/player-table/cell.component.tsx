@@ -13,7 +13,6 @@ import PlayerComponent from "../player/player.component";
  * @param {number} props.row - The row index of the cell.
  * @param {number} props.col - The column index of the cell.
  * @param {Array} props.players - The list of players.
- * @param {Object} props.activePlayer - The currently active player.
  * @param {Object} props.activePlayerData - The data of the active player.
  * @param {Function} props.onSelectPlayer - Callback function to handle player selection.
  *
@@ -23,7 +22,6 @@ const Cell: React.FC<CellProps> = ({
   row,
   col,
   players,
-  activePlayer,
   activePlayerData,
   onSelectPlayer,
 }) => {
@@ -31,7 +29,6 @@ const Cell: React.FC<CellProps> = ({
     row,
     col,
     players,
-    activePlayer,
     activePlayerData,
     onSelectPlayer,
   });

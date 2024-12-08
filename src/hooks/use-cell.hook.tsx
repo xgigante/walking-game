@@ -13,7 +13,6 @@ import { CellProps } from "@/interfaces/cell.interface";
  * @param {number} props.row - The row index of the cell.
  * @param {number} props.col - The column index of the cell.
  * @param {Array} props.players - The list of players.
- * @param {Object} props.activePlayer - The currently active player.
  * @param {Object} props.activePlayerData - The data of the active player.
  * @param {Function} props.onSelectPlayer - Callback function to handle player selection.
  *
@@ -27,7 +26,6 @@ export const useCell = ({
   row,
   col,
   players,
-  activePlayer,
   activePlayerData,
   onSelectPlayer,
 }: CellProps) => {
@@ -71,7 +69,7 @@ export const useCell = ({
 
   // Move player logic
   const movePlayer = async () => {
-    if (!activePlayer || playerInCell) return;
+    if (!activePlayerData || playerInCell) return;
 
     const operation = {
       operationType: 0,
@@ -81,8 +79,8 @@ export const useCell = ({
       value: { Row: row, Column: col },
     };
 
-    await dispatch(movePlayerFromApi(activePlayer, operation));
-    dispatch(setActivePlayer(activePlayer));
+    await dispatch(movePlayerFromApi(activePlayerData.username, operation));
+    dispatch(setActivePlayer(activePlayerData.username));
   };
 
   const handleClick = async () => {

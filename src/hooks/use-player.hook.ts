@@ -14,14 +14,12 @@ import { Player } from "@/interfaces/player.interface";
  *
  * @returns {object} An object containing state, actions, and computed properties.
  * @returns {object.state} state - The local and derived state.
- * @returns {boolean} state.isHovered - Indicates if the player is hovered.
  * @returns {boolean} state.isModalOpen - Indicates if the modal is open.
  * @returns {boolean} state.isSelected - Indicates if the player is selected.
  * @returns {boolean} state.isFooter - Indicates if the player is in the footer scenario.
  * @returns {boolean} state.isTable - Indicates if the player is in the table scenario.
  * @returns {boolean} state.isDisabled - Indicates if the player is disabled.
  * @returns {object.actions} actions - The actions to manipulate the state.
- * @returns {function} actions.setIsHovered - Function to set the hover state.
  * @returns {function} actions.handlePlayerClick - Function to handle player click.
  * @returns {function} actions.toggleModal - Function to toggle the modal state.
  * @returns {function} actions.closeModal - Function to close the modal.
@@ -42,8 +40,8 @@ export const usePlayer = (
     }),
     shallowEqual
   );
+
   // Local state
-  const [isHovered, setIsHovered] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Memoized
@@ -51,15 +49,14 @@ export const usePlayer = (
     () => activePlayer === player.username,
     [activePlayer, player.username]
   );
+
   const isFooter = scenario === PlayerScenario.InFooter;
   const isTable = scenario === PlayerScenario.InTable;
-  const isDisabled = useMemo(
-    () =>
-      !isTable &&
-      !isFooter &&
-      players.some((p) => p.username === player.username),
-    [isTable, isFooter, players, player.username]
-  );
+
+  const isDisabled = useMemo(() => {
+    const alreadySelected = players.some((p) => p.username === player.username);
+    return !isTable && !isFooter && alreadySelected;
+  }, [isTable, isFooter, players, player.username]);
 
   // Handler
   const handlePlayerClick = useCallback(() => {
@@ -67,12 +64,13 @@ export const usePlayer = (
     dispatch(setActivePlayer(player.username));
     onClick?.();
   }, [isFooter, player.username, dispatch, onClick]);
+
   const toggleModal = useCallback(() => setIsModalOpen((prev) => !prev), []);
+
   const closeModal = useCallback(() => setIsModalOpen(false), []);
 
   return {
     state: {
-      isHovered,
       isModalOpen,
       isSelected,
       isFooter,
@@ -80,7 +78,6 @@ export const usePlayer = (
       isDisabled,
     },
     actions: {
-      setIsHovered,
       handlePlayerClick,
       toggleModal,
       closeModal,

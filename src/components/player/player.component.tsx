@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaEllipsisV } from "react-icons/fa";
 import PlayerInfoComponent from "./player-info.component";
 import { PlayerProps, PlayerScenario } from "@/interfaces/player.interface";
@@ -18,105 +18,91 @@ const PlayerComponent: React.FC<PlayerProps> = React.memo(
   ({ player, scenario = PlayerScenario.Default, onClick }) => {
     const { title, username, color, image, playerNumber } = player;
     const { state, actions, computed } = usePlayer(player, scenario, onClick);
-    const {
-      isHovered,
-      isModalOpen,
-      isSelected,
-      isFooter,
-      isTable,
-      isDisabled,
-    } = state;
-    const { setIsHovered, handlePlayerClick, toggleModal, closeModal } =
-      actions;
-    const { players } = computed;
 
-    // Dynamic classes
-    const containerClasses = `
-      relative w-full h-full flex flex-col items-center justify-between
-      bg-dark-card sm:rounded-lg rounded-md bg-gradient-orange-alpha 
-      border-5-transparent transition duration-300
-      ${isFooter ? "cursor-default" : "cursor-pointer"}
-      ${isSelected ? "" : "border-dark-custom"}
-      ${
-        (!isFooter && isHovered) || (!isFooter && isSelected)
-          ? "shadow-card-player"
-          : ""
-      }
-      ${
-        isTable
+    const { isModalOpen, isSelected, isFooter, isTable, isDisabled } = state;
+    const { handlePlayerClick, toggleModal, closeModal } = actions;
+
+    const [isHovered, setIsHovered] = useState(false);
+
+    const getContainerClasses = () =>
+      [
+        "relative w-full h-full flex flex-col items-center justify-between",
+        "bg-dark-card sm:rounded-lg rounded-md bg-gradient-orange-alpha border-5-transparent",
+        "transition duration-300",
+        isFooter ? "cursor-default" : "cursor-pointer",
+        isSelected ? "" : "border-dark-custom",
+        isHovered || isSelected ? "shadow-card-player" : "",
+        isTable || isFooter
           ? "border-4"
-          : (!isFooter && isHovered) || isSelected
+          : isHovered || isSelected
           ? "border-5"
-          : ""
-      }
-      ${
+          : "",
         !isFooter && !isTable
           ? "transform hover:scale-105 transition duration-300"
-          : ""
-      }
-    `;
+          : "",
+      ].join(" ");
 
-    const imageClasses = `
-      w-full bg-center bg-no-repeat bg-contain
-      ${isHovered || isSelected ? "opacity-100" : "opacity-40"}
-      ${isTable ? "h-full" : "h-3/4"}
-    `;
+    const getImageClasses = () =>
+      [
+        "w-full bg-center bg-no-repeat bg-contain",
+        isHovered || isSelected ? "opacity-100" : "opacity-40",
+        isTable ? "h-full" : "h-3/4",
+      ].join(" ");
 
-    const footerTextClasses = `
-      font-medium text-white ${isFooter ? "text-xs" : "text-xs sm:text-lg"}
-    `;
+    const getFooterTextClasses = () =>
+      `font-medium text-white ${isFooter ? "text-xs" : "text-xs sm:text-lg"}`;
 
-    const footerContainerClasses = `
-      w-full sm:h-1/4 h-1/3 flex items-center justify-center  
-      bg-dark-card rounded-b-lg
-    `;
+    const getFooterContainerClasses = () =>
+      "w-full sm:h-1/4 h-1/3 flex items-center justify-center bg-dark-card rounded-b-lg";
 
-    const iconClasses = `absolute sm:bottom-2 bottom-3 sm:right-2 right-1.5 text-white cursor-pointer text-sm hover:text-gray-300`;
-
-    const playerNumberClasses = `font-inter text-xl sm:text-2xl absolute top right-2 font-extrabold`;
+    const getPlayerNumberClasses = () =>
+      "font-inter text-xl sm:text-2xl absolute top right-2 font-extrabold";
 
     return (
       <>
         <div
-          className={containerClasses}
+          className={getContainerClasses()}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           onClick={!isDisabled ? handlePlayerClick : undefined}
           style={{
-            borderColor:
-              isHovered && !isFooter ? color : isSelected ? color : "",
-            cursor: isDisabled ? "not-allowed" : "",
+            borderColor: isHovered || isSelected ? color : "",
+            cursor: isDisabled ? "not-allowed" : "pointer",
             opacity: isDisabled ? 0.7 : 1,
           }}
           role="button"
         >
           {/* Player number */}
           {isSelected && !isTable && (
-            <span className={playerNumberClasses} style={{ color }}>
-              {isFooter ? playerNumber : `P${players.length + 1}`}
+            <span className={getPlayerNumberClasses()} style={{ color }}>
+              {isFooter ? playerNumber : `P${computed.players.length + 1}`}
             </span>
           )}
 
           {/* Player image */}
           <div
-            className={imageClasses}
+            className={getImageClasses()}
             style={{ backgroundImage: `url(${image?.src})` }}
             aria-hidden="true"
           ></div>
 
           {/* Footer text */}
           {!isTable && (
-            <div className={footerContainerClasses}>
+            <div className={getFooterContainerClasses()}>
               <span
-                className={footerTextClasses}
+                className={getFooterTextClasses()}
                 dangerouslySetInnerHTML={{ __html: title || "" }}
               ></span>
               {isFooter && (
-                <FaEllipsisV className={iconClasses} onClick={toggleModal} />
+                <FaEllipsisV
+                  className="absolute sm:bottom-2 bottom-3 sm:right-2 right-1.5 text-white cursor-pointer text-sm hover:text-gray-300"
+                  onClick={toggleModal}
+                />
               )}
             </div>
           )}
         </div>
+
         {/* Modal */}
         {isModalOpen && (
           <PlayerInfoComponent username={username} onClick={closeModal} />
