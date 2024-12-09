@@ -34,24 +34,13 @@ export const useCell = ({
 
   // UseMemo to combine the logic for finding a player in the cell or history
   const { playerInCell, playerInHistory } = useMemo(() => {
-    let playerInCell: Player | undefined;
-    let playerInHistory: Player | undefined;
+    const playerInCell = players.find(
+      (player) => player.position.row === row && player.position.column === col
+    );
 
-    players.forEach((player) => {
-      if (
-        !playerInCell &&
-        player.position.row === row &&
-        player.position.column === col
-      ) {
-        playerInCell = player;
-      }
-      if (
-        !playerInHistory &&
-        player.positions.some((pos) => pos.row === row && pos.column === col)
-      ) {
-        playerInHistory = player;
-      }
-    });
+    const playerInHistory = players.find((player) =>
+      player.positions.some((pos) => pos.row === row && pos.column === col)
+    );
 
     return { playerInCell, playerInHistory };
   }, [players, row, col]);
